@@ -1,0 +1,24 @@
+{
+    "propel": {
+        "database": {
+            "connections": {
+                "cra": {
+                    "adapter": "mysql",
+                    "classname": "Propel\Runtime\Connection\ConnectionWrapper",
+                    "dsn": "mysql:host=mysql.latecoere.gl;dbname=cra_2",
+                    "user": "berto",
+                    "password": "lotti",
+                    "attributes": []
+                }
+            }
+        },
+        "runtime": {
+            "defaultConnection": "cra",
+            "connections": ["cra"]
+        },
+        "generator": {
+            "defaultConnection": "cra",
+            "connections": ["cra"]
+        }
+    }
+}

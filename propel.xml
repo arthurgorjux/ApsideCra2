@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<config>
+    <propel>
+        <database>
+            <connections>
+                <connection id="cra_2">
+                    <adapter>mysql</adapter>
+                    <classname>Propel\Runtime\Connection\ConnectionWrapper</classname>
+                    <dsn>mysql:host=mysql.latecoere.gl;dbname=cra_2</dsn>
+                    <user>berto</user>
+                    <password>lotti</password>
+                </connection>
+            </connections>
+        </database>
+        <runtime>
+            <defaultConnection>cra_2</defaultConnection>
+            <connection>cra_2</connection>
+        </runtime>
+        <generator>
+            <defaultConnection>cra_2</defaultConnection>
+            <connection>cra_2</connection>
+        </generator>
+    </propel>
+</config>

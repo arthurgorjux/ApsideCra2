@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="cra_2" defaultIdMethod="native">
+	<table name="type" phpName="Type">
+		<column name="id" type="varchar" size="255" required="true" primaryKey="true"/>
+		<column name="designation" type="varchar" size="255" required="true"/>
+	</table>
+	<table name="utilisateur" phpName="Utilisateur">
+		<column name="matricule" type="integer" required="true" primaryKey="true"/>
+		<column name="nom" type="varchar" size="255"/>
+		<column name="prenom" type="varchar" size="255"/>
+		<column name="admin" type="boolean" default="0"/>
+	</table>
+	<table name="cellule" phpName="Cellule">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+		<column name="designation" type="varchar" size="255" required="true"/>
+		<column name="type_c" type="integer"/>
+		<foreign-key foreignTable="type">
+			<reference local="type_c" foreign="id"/>
+		</foreign-key>
+	</table>
+	<table name="etat_incident" phpName="EtatIncident">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+		<column name="designation" type="varchar" size="255" required="true"/>
+		<column name="abreviation" type="varchar" size="255"/>
+	</table>
+	<table name="etat_demande" phpName="EtatDemande">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+		<column name="designation" type="varchar" size="255" required="true"/>
+	</table>
+	<table name="incident" phpName="Incident">
+		<column name="id" type="varchar" size="255" required="true" primaryKey="true"/>
+		<column name="cellule_i" type="integer"/>
+		<foreign-key foreignTable="cellule">
+			<reference local="cellule_i" foreign="id"/>
+		</foreign-key>
+		<column name="etat_i" type="integer"/>
+		<foreign-key foreignTable="etat_incident">
+			<reference local="etat_i" foreign="id"/>
+		</foreign-key>
+	</table>
+	<table name="demande" phpName="Demande">
+		<column name="id" type="varchar" size="255" required="true" primaryKey="true"/>
+		<column name="cellule_d" type="integer"/>
+		<foreign-key foreignTable="cellule">
+			<reference local="cellule_d" foreign="id"/>
+		</foreign-key>
+		<column name="etat_d" type="integer"/>
+		<foreign-key foreignTable="etat_demande">
+			<reference local="etat_d" foreign="id"/>
+		</foreign-key>
+		<column name="date_soumission" type="date"/>
+		<column name="date_maj" type="date"/>
+		<column name="date_livraison" type="date"/>
+		<column name="charge" type="float"/>
+		<column name="projet" type="varchar" size="255"/>
+		<column name="priorite" type="ENUM" valueSet="basse, normale, élevée, urgente, immédiate"/>
+	</table>
+	<table name="suivi" phpName="Suivi">
+		<column name="id" type="integer" required="true" primaryKey="true"/>
+		<column name="matricule_s" type="integer"/>
+		<foreign-key foreignTable="utilisateur">
+			<reference local="matricule_s" foreign="matricule"/>
+		</foreign-key>
+		<column name="temps_passe" type="float"/>
+		<column name="cellule_s" type="integer"/>
+		<foreign-key foreignTable="cellule">
+			<reference local="cellule_s" foreign="id"/>
+		</foreign-key>
+		<column name="demande_s" type="integer"/>
+		<foreign-key foreignTable="demande">
+			<reference local="demande_s" foreign="id"/>
+		</foreign-key>
+		<column name="incident_s" type="integer"/>
+		<foreign-key foreignTable="incident">
+			<reference local="incident_s" foreign="id"/>
+		</foreign-key>
+	</table>
+</database>
