@@ -98,14 +98,14 @@ abstract class Suivi implements ActiveRecordInterface
     /**
      * The value for the demande_s field.
      *
-     * @var        int
+     * @var        string
      */
     protected $demande_s;
 
     /**
      * The value for the incident_s field.
      *
-     * @var        int
+     * @var        string
      */
     protected $incident_s;
 
@@ -405,7 +405,7 @@ abstract class Suivi implements ActiveRecordInterface
     /**
      * Get the [demande_s] column value.
      *
-     * @return int
+     * @return string
      */
     public function getDemandeS()
     {
@@ -415,7 +415,7 @@ abstract class Suivi implements ActiveRecordInterface
     /**
      * Get the [incident_s] column value.
      *
-     * @return int
+     * @return string
      */
     public function getIncidentS()
     {
@@ -513,13 +513,13 @@ abstract class Suivi implements ActiveRecordInterface
     /**
      * Set the value of [demande_s] column.
      *
-     * @param int $v new value
+     * @param string $v new value
      * @return $this|\Suivi The current object (for fluent API support)
      */
     public function setDemandeS($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
         if ($this->demande_s !== $v) {
@@ -537,13 +537,13 @@ abstract class Suivi implements ActiveRecordInterface
     /**
      * Set the value of [incident_s] column.
      *
-     * @param int $v new value
+     * @param string $v new value
      * @return $this|\Suivi The current object (for fluent API support)
      */
     public function setIncidentS($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
         if ($this->incident_s !== $v) {
@@ -607,10 +607,10 @@ abstract class Suivi implements ActiveRecordInterface
             $this->cellule_s = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SuiviTableMap::translateFieldName('DemandeS', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->demande_s = (null !== $col) ? (int) $col : null;
+            $this->demande_s = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SuiviTableMap::translateFieldName('IncidentS', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->incident_s = (null !== $col) ? (int) $col : null;
+            $this->incident_s = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -863,6 +863,10 @@ abstract class Suivi implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
+        $this->modifiedColumns[SuiviTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . SuiviTableMap::COL_ID . ')');
+        }
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(SuiviTableMap::COL_ID)) {
@@ -907,10 +911,10 @@ abstract class Suivi implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->cellule_s, PDO::PARAM_INT);
                         break;
                     case 'demande_s':
-                        $stmt->bindValue($identifier, $this->demande_s, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->demande_s, PDO::PARAM_STR);
                         break;
                     case 'incident_s':
-                        $stmt->bindValue($identifier, $this->incident_s, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->incident_s, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -919,6 +923,13 @@ abstract class Suivi implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
+
+        try {
+            $pk = $con->lastInsertId();
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get autoincrement id.', 0, $e);
+        }
+        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -1329,7 +1340,6 @@ abstract class Suivi implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setId($this->getId());
         $copyObj->setMatriculeS($this->getMatriculeS());
         $copyObj->setTempsPasse($this->getTempsPasse());
         $copyObj->setCelluleS($this->getCelluleS());
@@ -1337,6 +1347,7 @@ abstract class Suivi implements ActiveRecordInterface
         $copyObj->setIncidentS($this->getIncidentS());
         if ($makeNew) {
             $copyObj->setNew(true);
+            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1501,7 +1512,7 @@ abstract class Suivi implements ActiveRecordInterface
      */
     public function getDemande(ConnectionInterface $con = null)
     {
-        if ($this->aDemande === null && ($this->demande_s != 0)) {
+        if ($this->aDemande === null && (($this->demande_s !== "" && $this->demande_s !== null))) {
             $this->aDemande = ChildDemandeQuery::create()->findPk($this->demande_s, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
@@ -1552,7 +1563,7 @@ abstract class Suivi implements ActiveRecordInterface
      */
     public function getIncident(ConnectionInterface $con = null)
     {
-        if ($this->aIncident === null && ($this->incident_s != 0)) {
+        if ($this->aIncident === null && (($this->incident_s !== "" && $this->incident_s !== null))) {
             $this->aIncident = ChildIncidentQuery::create()->findPk($this->incident_s, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference

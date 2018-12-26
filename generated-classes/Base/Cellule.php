@@ -89,7 +89,7 @@ abstract class Cellule implements ActiveRecordInterface
     /**
      * The value for the type_c field.
      *
-     * @var        int
+     * @var        string
      */
     protected $type_c;
 
@@ -390,7 +390,7 @@ abstract class Cellule implements ActiveRecordInterface
     /**
      * Get the [type_c] column value.
      *
-     * @return int
+     * @return string
      */
     public function getTypeC()
     {
@@ -440,13 +440,13 @@ abstract class Cellule implements ActiveRecordInterface
     /**
      * Set the value of [type_c] column.
      *
-     * @param int $v new value
+     * @param string $v new value
      * @return $this|\Cellule The current object (for fluent API support)
      */
     public function setTypeC($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
         if ($this->type_c !== $v) {
@@ -504,7 +504,7 @@ abstract class Cellule implements ActiveRecordInterface
             $this->designation = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CelluleTableMap::translateFieldName('TypeC', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->type_c = (null !== $col) ? (int) $col : null;
+            $this->type_c = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -817,7 +817,7 @@ abstract class Cellule implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->designation, PDO::PARAM_STR);
                         break;
                     case 'type_c':
-                        $stmt->bindValue($identifier, $this->type_c, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->type_c, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1297,7 +1297,7 @@ abstract class Cellule implements ActiveRecordInterface
      */
     public function getType(ConnectionInterface $con = null)
     {
-        if ($this->aType === null && ($this->type_c != 0)) {
+        if ($this->aType === null && (($this->type_c !== "" && $this->type_c !== null))) {
             $this->aType = ChildTypeQuery::create()->findPk($this->type_c, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference

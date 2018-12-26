@@ -91,8 +91,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSuivi findOneByMatriculeS(int $matricule_s) Return the first ChildSuivi filtered by the matricule_s column
  * @method     ChildSuivi findOneByTempsPasse(double $temps_passe) Return the first ChildSuivi filtered by the temps_passe column
  * @method     ChildSuivi findOneByCelluleS(int $cellule_s) Return the first ChildSuivi filtered by the cellule_s column
- * @method     ChildSuivi findOneByDemandeS(int $demande_s) Return the first ChildSuivi filtered by the demande_s column
- * @method     ChildSuivi findOneByIncidentS(int $incident_s) Return the first ChildSuivi filtered by the incident_s column *
+ * @method     ChildSuivi findOneByDemandeS(string $demande_s) Return the first ChildSuivi filtered by the demande_s column
+ * @method     ChildSuivi findOneByIncidentS(string $incident_s) Return the first ChildSuivi filtered by the incident_s column *
 
  * @method     ChildSuivi requirePk($key, ConnectionInterface $con = null) Return the ChildSuivi by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSuivi requireOne(ConnectionInterface $con = null) Return the first ChildSuivi matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -101,16 +101,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSuivi requireOneByMatriculeS(int $matricule_s) Return the first ChildSuivi filtered by the matricule_s column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSuivi requireOneByTempsPasse(double $temps_passe) Return the first ChildSuivi filtered by the temps_passe column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSuivi requireOneByCelluleS(int $cellule_s) Return the first ChildSuivi filtered by the cellule_s column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildSuivi requireOneByDemandeS(int $demande_s) Return the first ChildSuivi filtered by the demande_s column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildSuivi requireOneByIncidentS(int $incident_s) Return the first ChildSuivi filtered by the incident_s column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSuivi requireOneByDemandeS(string $demande_s) Return the first ChildSuivi filtered by the demande_s column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSuivi requireOneByIncidentS(string $incident_s) Return the first ChildSuivi filtered by the incident_s column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildSuivi[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSuivi objects based on current ModelCriteria
  * @method     ChildSuivi[]|ObjectCollection findById(int $id) Return ChildSuivi objects filtered by the id column
  * @method     ChildSuivi[]|ObjectCollection findByMatriculeS(int $matricule_s) Return ChildSuivi objects filtered by the matricule_s column
  * @method     ChildSuivi[]|ObjectCollection findByTempsPasse(double $temps_passe) Return ChildSuivi objects filtered by the temps_passe column
  * @method     ChildSuivi[]|ObjectCollection findByCelluleS(int $cellule_s) Return ChildSuivi objects filtered by the cellule_s column
- * @method     ChildSuivi[]|ObjectCollection findByDemandeS(int $demande_s) Return ChildSuivi objects filtered by the demande_s column
- * @method     ChildSuivi[]|ObjectCollection findByIncidentS(int $incident_s) Return ChildSuivi objects filtered by the incident_s column
+ * @method     ChildSuivi[]|ObjectCollection findByDemandeS(string $demande_s) Return ChildSuivi objects filtered by the demande_s column
+ * @method     ChildSuivi[]|ObjectCollection findByIncidentS(string $incident_s) Return ChildSuivi objects filtered by the incident_s column
  * @method     ChildSuivi[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -472,37 +472,19 @@ abstract class SuiviQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByDemandeS(1234); // WHERE demande_s = 1234
-     * $query->filterByDemandeS(array(12, 34)); // WHERE demande_s IN (12, 34)
-     * $query->filterByDemandeS(array('min' => 12)); // WHERE demande_s > 12
+     * $query->filterByDemandeS('fooValue');   // WHERE demande_s = 'fooValue'
+     * $query->filterByDemandeS('%fooValue%', Criteria::LIKE); // WHERE demande_s LIKE '%fooValue%'
      * </code>
      *
-     * @see       filterByDemande()
-     *
-     * @param     mixed $demandeS The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $demandeS The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildSuiviQuery The current query, for fluid interface
      */
     public function filterByDemandeS($demandeS = null, $comparison = null)
     {
-        if (is_array($demandeS)) {
-            $useMinMax = false;
-            if (isset($demandeS['min'])) {
-                $this->addUsingAlias(SuiviTableMap::COL_DEMANDE_S, $demandeS['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($demandeS['max'])) {
-                $this->addUsingAlias(SuiviTableMap::COL_DEMANDE_S, $demandeS['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
+        if (null === $comparison) {
+            if (is_array($demandeS)) {
                 $comparison = Criteria::IN;
             }
         }
@@ -515,37 +497,19 @@ abstract class SuiviQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByIncidentS(1234); // WHERE incident_s = 1234
-     * $query->filterByIncidentS(array(12, 34)); // WHERE incident_s IN (12, 34)
-     * $query->filterByIncidentS(array('min' => 12)); // WHERE incident_s > 12
+     * $query->filterByIncidentS('fooValue');   // WHERE incident_s = 'fooValue'
+     * $query->filterByIncidentS('%fooValue%', Criteria::LIKE); // WHERE incident_s LIKE '%fooValue%'
      * </code>
      *
-     * @see       filterByIncident()
-     *
-     * @param     mixed $incidentS The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $incidentS The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildSuiviQuery The current query, for fluid interface
      */
     public function filterByIncidentS($incidentS = null, $comparison = null)
     {
-        if (is_array($incidentS)) {
-            $useMinMax = false;
-            if (isset($incidentS['min'])) {
-                $this->addUsingAlias(SuiviTableMap::COL_INCIDENT_S, $incidentS['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($incidentS['max'])) {
-                $this->addUsingAlias(SuiviTableMap::COL_INCIDENT_S, $incidentS['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
+        if (null === $comparison) {
+            if (is_array($incidentS)) {
                 $comparison = Criteria::IN;
             }
         }

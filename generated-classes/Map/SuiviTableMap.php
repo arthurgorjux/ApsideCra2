@@ -149,14 +149,14 @@ class SuiviTableMap extends TableMap
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Suivi');
         $this->setPackage('');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('matricule_s', 'MatriculeS', 'INTEGER', 'utilisateur', 'matricule', false, null, null);
         $this->addColumn('temps_passe', 'TempsPasse', 'FLOAT', false, null, null);
         $this->addForeignKey('cellule_s', 'CelluleS', 'INTEGER', 'cellule', 'id', false, null, null);
-        $this->addForeignKey('demande_s', 'DemandeS', 'INTEGER', 'demande', 'id', false, null, null);
-        $this->addForeignKey('incident_s', 'IncidentS', 'INTEGER', 'incident', 'id', false, null, null);
+        $this->addForeignKey('demande_s', 'DemandeS', 'VARCHAR', 'demande', 'id', false, 255, null);
+        $this->addForeignKey('incident_s', 'IncidentS', 'VARCHAR', 'incident', 'id', false, 255, null);
     } // initialize()
 
     /**
@@ -445,6 +445,10 @@ class SuiviTableMap extends TableMap
             $criteria = clone $criteria; // rename for clarity
         } else {
             $criteria = $criteria->buildCriteria(); // build Criteria from Suivi object
+        }
+
+        if ($criteria->containsKey(SuiviTableMap::COL_ID) && $criteria->keyContainsValue(SuiviTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.SuiviTableMap::COL_ID.')');
         }
 
 

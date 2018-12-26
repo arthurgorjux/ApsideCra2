@@ -138,7 +138,7 @@ class CelluleTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('designation', 'Designation', 'VARCHAR', true, 255, null);
-        $this->addForeignKey('type_c', 'TypeC', 'INTEGER', 'type', 'id', false, null, null);
+        $this->addForeignKey('type_c', 'TypeC', 'VARCHAR', 'type', 'id', false, 255, null);
     } // initialize()
 
     /**

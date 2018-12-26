@@ -83,19 +83,19 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildCellule findOneById(int $id) Return the first ChildCellule filtered by the id column
  * @method     ChildCellule findOneByDesignation(string $designation) Return the first ChildCellule filtered by the designation column
- * @method     ChildCellule findOneByTypeC(int $type_c) Return the first ChildCellule filtered by the type_c column *
+ * @method     ChildCellule findOneByTypeC(string $type_c) Return the first ChildCellule filtered by the type_c column *
 
  * @method     ChildCellule requirePk($key, ConnectionInterface $con = null) Return the ChildCellule by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCellule requireOne(ConnectionInterface $con = null) Return the first ChildCellule matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildCellule requireOneById(int $id) Return the first ChildCellule filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCellule requireOneByDesignation(string $designation) Return the first ChildCellule filtered by the designation column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildCellule requireOneByTypeC(int $type_c) Return the first ChildCellule filtered by the type_c column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCellule requireOneByTypeC(string $type_c) Return the first ChildCellule filtered by the type_c column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildCellule[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildCellule objects based on current ModelCriteria
  * @method     ChildCellule[]|ObjectCollection findById(int $id) Return ChildCellule objects filtered by the id column
  * @method     ChildCellule[]|ObjectCollection findByDesignation(string $designation) Return ChildCellule objects filtered by the designation column
- * @method     ChildCellule[]|ObjectCollection findByTypeC(int $type_c) Return ChildCellule objects filtered by the type_c column
+ * @method     ChildCellule[]|ObjectCollection findByTypeC(string $type_c) Return ChildCellule objects filtered by the type_c column
  * @method     ChildCellule[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -355,37 +355,19 @@ abstract class CelluleQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByTypeC(1234); // WHERE type_c = 1234
-     * $query->filterByTypeC(array(12, 34)); // WHERE type_c IN (12, 34)
-     * $query->filterByTypeC(array('min' => 12)); // WHERE type_c > 12
+     * $query->filterByTypeC('fooValue');   // WHERE type_c = 'fooValue'
+     * $query->filterByTypeC('%fooValue%', Criteria::LIKE); // WHERE type_c LIKE '%fooValue%'
      * </code>
      *
-     * @see       filterByType()
-     *
-     * @param     mixed $typeC The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $typeC The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCelluleQuery The current query, for fluid interface
      */
     public function filterByTypeC($typeC = null, $comparison = null)
     {
-        if (is_array($typeC)) {
-            $useMinMax = false;
-            if (isset($typeC['min'])) {
-                $this->addUsingAlias(CelluleTableMap::COL_TYPE_C, $typeC['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($typeC['max'])) {
-                $this->addUsingAlias(CelluleTableMap::COL_TYPE_C, $typeC['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
+        if (null === $comparison) {
+            if (is_array($typeC)) {
                 $comparison = Criteria::IN;
             }
         }
