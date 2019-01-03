@@ -12,7 +12,8 @@
 	},
 	"require": {
 		"php": ">=5.3.7",
-		"propel/propel": "~2.0@dev"
+		"propel/propel": "~2.0@dev",
+		"twig/twig": "~1.0"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
@@ -23,5 +24,8 @@
 	},
 	"autoload": {
 		"classmap": ["generated-classes/"]
+	},
+	"config": {
+		"vendor-dir": "./vendor"
 	}
 }
