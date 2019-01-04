@@ -131,6 +131,8 @@ switch (ENVIRONMENT)
  */
 	$view_folder = '';
 
+	$vendor_folder = 'vendor';
+
 
 /*
  * --------------------------------------------------------------------
@@ -235,6 +237,9 @@ switch (ENVIRONMENT)
 	// Name of the "system" directory
 	define('SYSDIR', basename(BASEPATH));
 
+	// Name of the "vendor" directory
+	define('VENDOR', realpath($vendor_folder));
+
 	// The path to the "application" directory
 	if (is_dir($application_folder))
 	{
@@ -313,3 +318,4 @@ switch (ENVIRONMENT)
  * And away we go...
  */
 require_once BASEPATH.'core/CodeIgniter.php';
+require_once '/mnt/intranet/lib/lat_toolbox/1.0/autoload.php';

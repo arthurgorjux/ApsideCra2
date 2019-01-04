@@ -1,5 +1,7 @@
 <?php
 
+require_once VENDOR . '/autoload.php';
+
 class Twig {
     private $CI;
 
